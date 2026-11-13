@@ -152,7 +152,7 @@ Nếu quá 5 phút:
 
 ### Lỗi mà sửa câu chữ không cứu được
 
-- **AI nói "mình không nhả" nhưng vẫn có quyền nhả.** Nếu AI còn gọi được `nha_giao_dich`, một tin nhắn bình tĩnh như K9 vẫn có thể khiến nó gọi. Thiết kế cứu: AI không có tool này. Phía khách không có nút nhả (số 8); chỉ màn hình tư vấn viên có, với hai bước xác nhận (số 9).
+- **AI nói "mình không nhả" nhưng vẫn có quyền nhả.** Nếu AI còn gọi được `nha_giao_dich`, một tin nhắn bình tĩnh như K9 vẫn có thể khiến nó gọi. Thiết kế cứu: AI không gọi được tool này, nó chỉ soạn hồ sơ nhả gửi tư vấn viên (§4, luật 1). Phía khách không có nút nhả (số 8); chỉ màn hình tư vấn viên có, với hai bước xác nhận (số 9).
 - **AI nói "mình đã chuyển tư vấn viên" lúc 23h** (K8). Câu đúng sự thật nhưng không ai nhận tới 8h. Thiết kế cứu: ngoài giờ trực, AI phải nói rõ chưa có người, giao dịch vẫn giữ, và việc khách tự làm được ngay là khoá ví.
 
 ### Lỗi còn lại
@@ -163,7 +163,62 @@ Nếu quá 5 phút:
 
 ## §4. Mức tự chủ  (chặng 4)
 
-*Chưa viết.* Với mỗi tool: mức · lý do theo cost-of-error · phương án đã loại. Thêm: tool khó xếp nhất · thử mức trên K1, K2 và một kịch bản bình thường (K11) · luật thêm hoặc tool tách bước · một mức tự chủ đã đổi lời hứa nào.
+### Mức của từng tool
+
+| Tool | Mức | Sai thì ai chịu gì · đảo được không | Chờ người thì mất gì | Phương án đã loại |
+|---|---|---|---|---|
+| `giu_giao_dich` | **Tự làm** | Giữ nhầm: khách thật bị chậm. Đảo được, nhưng nhả phải qua tư vấn viên nên cái giá thật là thời gian chờ duyệt | Tiền đi mất trong lúc chờ. Ở đây chờ chính là sai | *Cần duyệt:* không ai duyệt kịp trong vài giây. *Cấm:* AI mất việc an toàn duy nhất cho K1 và K7 |
+| `yeu_cau_xac_minh` | **Tự làm**, có hoàn tác | Gửi nhầm: khách mất khoảng 20 giây, thu lại được | K2 đứng chờ ở quầy cho một bước vô hại | *Cần duyệt:* K2 chờ vô ích. Rủi ro thật là xác thực đúng bị hiểu thành an toàn, nên nhóm thêm luật 2 bên dưới thay vì hạ mức |
+| `chuyen_tu_van_vien` | **Tự làm**, có hoàn tác | Chuyển thừa: tốn thời gian tư vấn viên, khách chờ thêm. Huỷ được | Hỏi "bạn có muốn gặp tư vấn viên không" thì người bị lừa ở K1 sẽ nói không | *Hỏi khách trước:* K1 từ chối. *Cấm:* trái lát cắt |
+| `khoa_vi` | **Cần người duyệt: khách** | Khoá nhầm: khách mất ví nhiều giờ, mở lại qua tổng đài. Khoá chậm: kẻ gian còn trong ví (K8) | Khách chần chừ thì ví chưa khoá; giao dịch đang giữ vẫn giữ | *Tự làm:* K2, K3, K11 bị khoá nhầm nhiều giờ. *Tư vấn viên duyệt:* K8 lúc 23h không có ai. *Cấm:* K8 mất cách tự cứu nhanh nhất |
+| `nha_giao_dich` | **Cần người duyệt: tư vấn viên.** AI chỉ soạn hồ sơ nhả (luật 1), không bao giờ tự gọi tool này; khách không phải người duyệt | Nhả nhầm: chủ ví mất tiền, không đảo được, không ai sửa sau | K2 chờ khoảng 2 phút trong giờ trực; ngoài giờ chờ tới 8h | *Tự làm (AI nhả sau xác thực đúng):* K1, K9 mất tiền. *Khách duyệt:* người bấm xác nhận chính là người đang bị thao túng, nên bước xác nhận không chặn được gì. *Cấm hẳn:* K2 phải gọi tổng đài như hôm nay |
+
+**Với hai tool cần người duyệt.**
+
+- `khoa_vi` — *Ai duyệt:* chủ ví, trong chat. *Thấy gì trước khi bấm:* mọi giao dịch dừng ngay; mở lại phải gọi tổng đài, mất nhiều giờ; trong lúc đó không thanh toán được bằng ví (số 7). *Quá hạn:* không khoá.
+- `nha_giao_dich` — *Ai duyệt:* tư vấn viên. *Thấy gì:* lời khách nguyên văn, phân loại của AI, trạng thái xác thực kèm cảnh báo, ghi chú nếu khách phản đối phân loại; rồi hộp "Không đảo lại được. Tiền đi trong vài giây." trước nút xác nhận (số 9). *Quá hạn:* giao dịch vẫn giữ; sau 5 phút AI báo khách và gợi ý cách khác.
+
+### Tool khó xếp nhất: `nha_giao_dich`
+
+Mức nào cũng có giá, và hai cái giá chính là hai kịch bản đắt nhất ở §2:
+
+- **Cho AI tự nhả** (sau xác thực đúng): K2 xong trong 20 giây. Giá: K1 và K9 mất tiền, không đảo được.
+- **Khách tự duyệt** (hộp cảnh báo rồi khách bấm xác nhận): K2 đi tiếp ngay. Giá: ở K1, người bấm xác nhận chính là người đang bị giục, nên hộp cảnh báo bị bấm qua.
+- **Cấm hẳn, không ai nhả trong chat:** K1 được chặn. Giá: K2 phải gọi tổng đài, đúng tình trạng hôm nay mà người ở quầy viện phí than phiền.
+- **Tư vấn viên duyệt:** K1 có một người không bị giục xem trước khi tiền đi. Giá: K2 chờ khoảng 2 phút, và ngoài giờ trực thì không có ai duyệt.
+
+*Mỗi người từng chọn gì ở bước xếp riêng (5 phút, chưa bàn với nhau):*
+
+| Thành viên | Mức đã chọn cho `nha_giao_dich` | Lý do một câu |
+|---|---|---|
+| Nguyễn Trọng Truyền | **Cấm hẳn** (không nhả trong chat) | Tiền đi không đảo lại được và xác thực khuôn mặt không chặn được K1, nên thà bắt khách gọi tổng đài còn hơn để lọt ca lừa đảo. |
+| Lê Ngọc Khánh | **Cần người duyệt: tư vấn viên** | Không giao tool mất tiền cho AI tự bấm, nhưng nếu cấm hẳn thì tính năng chat không giải quyết được bức xúc của K2 so với hiện tại. |
+| [Tên thành viên 3] | **Tự làm có điều kiện** (sau khi xác thực khuôn mặt đúng) | Ưu tiên giải cứu K2 đang đứng ở quầy viện phí trong 20 giây và xử lý được cả ban đêm (sau 20h), vì nghĩ chính chủ quét mặt là đủ an toàn. |
+| [Tên thành viên 4] | **Cần người duyệt: khách** (hiện hộp cảnh báo đỏ bắt khách bấm xác nhận) | Muốn K2 tự đi tiếp ngay mà không phải chờ tư vấn viên 2 phút, đồng thời nghĩ hộp cảnh báo lừa đảo sẽ làm K1 giật mình dừng lại. |
+
+*Nhóm chốt:* **Cần người duyệt: tư vấn viên.** Ban đầu nhóm lệch nhau ở 4 mức: **Cấm hẳn** (bảo vệ K1 tuyệt đối), **AI tự nhả sau xác thực** (cứu K2 trong 20 giây), **Khách tự duyệt qua hộp cảnh báo** (cứu K2 ngay và kỳ vọng cảnh báo thức tỉnh được K1), và **Tư vấn viên duyệt**. Nhóm bác bỏ "AI tự nhả" và "Khách tự duyệt" vì ở K1 và K9, chính nạn nhân đang bị thao túng tâm lý sẽ tự quét mặt và tự bấm bỏ qua mọi cảnh báo; đồng thời bác bỏ "Cấm hẳn" vì đẩy K2 về lại cảnh phải tự gọi tổng đài như cũ. Cuối cùng nhóm chốt **Tư vấn viên duyệt**: chấp nhận để K2 chờ khoảng 2 phút (giá lấy lại được) để tiền của K1 có một người không bị giục xem trước khi đi (giá không lấy lại được). Để giảm thời gian chờ cho K2, nhóm tách bước "soạn hồ sơ nhả" (luật 1 bên dưới) và cho AI tự gửi xác thực trước, giúp tư vấn viên nhận đủ thông tin và chỉ cần bấm một quyết định cuối.
+
+`khoa_vi` là tool khó thứ hai: tự làm thì K2, K3, K11 trả giá; chờ khách bấm thì K8 trả giá.
+
+### Thử mức đã đặt trên ba kịch bản
+
+| Kịch bản | Cái sai ở §2 có bị chặn không | Còn việc nào AI làm khi lẽ ra phải hỏi | Người dùng bình thường có phải chờ vô ích |
+|---|---|---|---|
+| **K1** bị lừa đòi nhả | Có. AI không có quyền nhả dù khách xác thực đúng hay nài thêm | AI chuyển tư vấn viên mà không hỏi. Nhóm cố ý: hỏi thì khách từ chối, và việc này hoàn tác được | Không áp dụng |
+| **K2** gấp ở quầy viện phí | Có. AI không khoá ví, không để khách chờ mù: gửi xác thực ngay, nói rõ bước sau và thời gian | Không | **Có**, khoảng 2 phút chờ tư vấn viên; ngoài giờ thì tới 8h. Đây là giá nhóm chấp nhận để chặn K1 |
+| **K11** hỏi cách khoá thẻ (bình thường) | Có. AI hỏi lại "khoá ngay hay chỉ cần biết cách", không gọi `khoa_vi` | Không | Không. Một câu hỏi, không chờ ai |
+
+### Luật thêm và tool tách bước
+
+1. **Tách "soạn hồ sơ nhả" khỏi "nhả".** AI tự soạn hồ sơ (lời khách, phân loại, trạng thái xác thực) và gửi tư vấn viên; chỉ tư vấn viên bấm `nha_giao_dich`. Nhờ đó K2 không phải kể lại, còn K1 và K9 vẫn bị chặn.
+2. **Xác thực đúng không mở quyền nhả.** Kết quả `yeu_cau_xac_minh` chỉ là một dòng trong hồ sơ, đi kèm cảnh báo cho tư vấn viên. Chặn K1 và K9.
+3. **Không khoá, không nhả theo lời người nhắn thay chủ ví.** Chỉ giữ và chuyển người (K7).
+4. **Một tin vừa có dấu hiệu bị lừa vừa có dấu hiệu gấp thì xử lý như bị lừa.** Hướng sai đó không đảo được.
+5. **Ngoài giờ trực, AI phải nói rõ chưa có người nhận** mỗi khi chuyển tư vấn viên (K8).
+
+### Mức tự chủ đã đổi lời hứa nào
+
+Nếu AI được tự nhả, lời hứa với khách là "trợ lý xử lý giao dịch bị giữ cho bạn". Với `nha_giao_dich` ở mức tư vấn viên duyệt, lời hứa trở thành "trợ lý đưa bạn tới đúng người nhanh nhất, và bạn không phải kể lại". Câu trong prototype nói đúng lời hứa mới: "Mình không tự cho giao dịch đi tiếp được, nhưng mình đưa bạn tới đúng người nhanh nhất." Mục "Trợ lý này làm được gì?" ở đầu chat (số 1) cũng ghi việc nhả vào nhóm "Không làm".
 
 ## §5. Prototype  (chặng 5)
 
