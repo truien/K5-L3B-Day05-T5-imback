@@ -1,6 +1,6 @@
 # Bài nộp LAB5 — T5 Ví điện tử · Nhóm imback
 
-**Lớp:** L3B · **Bàn / zone:** ____ · **Track:** T5
+**Lớp:** L3B · **Bàn / zone:** A · **Track:** T5
 
 | Họ và Tên | Mã Học Viên | Việc đã làm |
 |---|---|---|
