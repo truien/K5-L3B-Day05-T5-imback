@@ -71,13 +71,95 @@ Phủ lớp: ① K5 · ② K3, K11 · ③ K4, K6, K7 · ④ K1, K2, K8, K9, K10.
 
 ## §3. Khi AI sai  (chặng 3)
 
-*Chưa viết.* Với mỗi kịch bản đắt nhất (K1, K2):
+Câu AI nói dưới đây là nguyên văn trong `prototype/index.html`. "Số N" là số chú thích trên ảnh trong `prototype/README.md`. Các mốc thời gian (20 giây, 2 phút, 5 phút) là mục tiêu thiết kế của nhóm, không phải số liệu đo.
 
-- AI nói gì (nguyên văn) · người dùng thấy gì · làm gì tiếp · ai được báo, sau bao lâu.
-- Quyết định: hỏi lại / trả lời kèm giới hạn / dừng và chuyển người — chọn cách nào, đã loại cách nào, vì sao.
-- Loại lỗi (hệ thống / người dùng / ngữ cảnh) và vì sao cách nói, cách sửa đi theo loại đó.
-- 2–3 nguyên tắc HAX/PAIR, mỗi cái trỏ vào một chỗ cụ thể.
-- Lỗi nào sửa câu chữ không cứu được, và thiết kế cứu nó thế nào.
+### K1 · người bị lừa đòi nhả
+
+**AI nói (nguyên văn).**
+
+> **Bạn dừng lại đã, đừng chuyển thêm khoản nào.** Không cơ quan nào yêu cầu chuyển tiền qua điện thoại để "xác minh". Tiền của bạn vẫn nằm trong ví.
+>
+> Mình là AI nên không được cho giao dịch này đi tiếp. Mình đã giữ nó và đưa bạn tới tư vấn viên.
+
+Câu này không hứa điều AI không làm được: không hứa nhả, không hứa tư vấn viên sẽ nhả, không hứa thời gian.
+
+**Người dùng thấy gì.**
+
+- Nhãn "Dấu hiệu bị lừa: RÕ", kèm "Mình dựa vào": trích đúng chữ khách viết ("công an", "bị bắt") và trạng thái giao dịch. Dưới đó là giới hạn: "Mình không xem được vì sao hệ thống giữ giao dịch, và mình có thể hiểu sai ý bạn." (số 3)
+- Thẻ giao dịch "Đang tạm giữ · tiền chưa rời ví" (số 2).
+- Dòng "Đã tự làm: chuyển cuộc chat cho tư vấn viên · Hoàn tác" (số 6).
+- Dòng "Ở đây không có nút cho giao dịch đi tiếp" (số 8). Không có nút nhả nào, kể cả nút mờ.
+
+**Làm gì tiếp.**
+
+- Không làm gì: giao dịch vẫn giữ, tư vấn viên vào chat.
+- Bấm "AI hiểu sai rồi, tôi tự chuyển cho người quen" (số 5). AI hỏi đúng một câu: "lúc này có ai đang gọi điện hoặc nhắn tin hướng dẫn bạn chuyển khoản này không?" Câu trả lời được ghi vào hồ sơ, nhưng không mở quyền nhả.
+- Bấm "Khoá ví ngay": hiện hộp xác nhận nêu hậu quả (số 7).
+- Bấm "Hoàn tác": huỷ chuyển tư vấn viên. Giao dịch vẫn giữ.
+
+**Ai được báo, sau bao lâu.** Tư vấn viên, ngay khi AI chuyển. Họ thấy lời khách nguyên văn, phân loại của AI, trạng thái xác thực, ghi chú nếu khách phản đối phân loại (số 9). Ngoài giờ trực (20h–8h) không ai nhận: AI nói rõ điều đó, giao dịch vẫn giữ, và đưa số tổng đài.
+
+**Quyết định: dừng và chuyển người.**
+
+- *Loại "hỏi lại trước khi làm gì".* Người bị lừa thường được dặn sẵn câu trả lời (K9), nên câu hỏi không phân biệt được gì. Mỗi lượt hỏi là thêm thời gian cho người đang giục. Nhóm chỉ dùng hỏi lại ở nhánh khách tự sửa AI, và ở đó câu trả lời cũng không đổi được ai là người quyết.
+- *Loại "trả lời kèm giới hạn"* (kiểu "có thể đây là lừa đảo, bạn cân nhắc"). Cách này trả quyết định về cho đúng người đang bị thao túng.
+- *Chọn chuyển người* vì đây là cách duy nhất đưa một người không bị giục vào cuộc, đúng lời người con trong track: "chỉ cần có ai bảo mẹ dừng lại".
+
+**Loại lỗi.**
+
+- *AI nhả cho người bị lừa* là **lỗi ngữ cảnh**: mọi bước chạy đúng thiết kế (chính chủ, xác thực đúng) nhưng sai với tình huống. Lỗi loại này sửa câu chữ không được, phải sửa thiết kế: AI không có quyền nhả.
+- *AI gắn nhãn "bị lừa" cho một người thật* là **lỗi hệ thống**. Cách nói: AI nhận phần mình ("mình có thể đã hiểu sai"), không bắt khách chứng minh. Cách sửa: nút số 5, ghi chú vào hồ sơ, và tư vấn viên chấm phân loại (số 10).
+
+### K2 · người thật đang gấp
+
+**AI nói (nguyên văn).**
+
+> Mình hiểu bạn đang gấp. Cách nhanh nhất là xác thực khuôn mặt ngay bên dưới, khoảng 20 giây.
+
+Sau khi khách xác thực:
+
+> Xác thực xong. Bước cuối là tư vấn viên bấm duyệt; mình là AI nên không tự cho tiền đi.
+>
+> Mình đã gửi kèm tóm tắt nên bạn không phải kể lại. Thường mất khoảng 2 phút. Nếu quá 5 phút chưa ai duyệt, mình sẽ báo bạn và giao dịch vẫn giữ nguyên.
+
+Nếu quá 5 phút:
+
+> Đã 5 phút mà chưa có tư vấn viên duyệt. Giao dịch vẫn được giữ và tiền vẫn trong ví. Bạn có thể tiếp tục chờ, thanh toán bằng cách khác, hoặc gọi tổng đài.
+
+**Người dùng thấy gì.**
+
+- Nhãn "Dấu hiệu bị lừa: CHƯA THẤY", kèm chữ khách viết ("viện phí", "ở quầy") và cùng dòng giới hạn (số 3). Nhãn nói "chưa thấy", không nói "an toàn".
+- Màn hình xác thực hiện ngay trong chat, cùng dòng "Đã tự làm: gửi bước xác thực · Hoàn tác" (số 6).
+- Sau xác thực: dòng chuyển tư vấn viên và dòng "không có nút cho giao dịch đi tiếp" (số 8).
+
+**Làm gì tiếp.** Xác thực rồi chờ duyệt; hoặc hoàn tác bước xác thực; hoặc xin gặp người thật. Không làm gì thì giao dịch vẫn giữ, không tự huỷ, không tự đi.
+
+**Ai được báo, sau bao lâu.** Tư vấn viên, ngay sau khi khách xác thực xong. Hồ sơ ghi "Khuôn mặt: đúng" kèm cảnh báo: khuôn mặt đúng chỉ cho biết chính chủ đang bấm, không cho biết chủ ví có bị ép hay bị lừa không. Tư vấn viên nhả qua hai bước xác nhận.
+
+**Quyết định: trả lời kèm giới hạn, và làm luôn bước đảo được.**
+
+- *Loại "hỏi lại".* Khách đã nói đủ: đang ở đâu, cần gì. Hỏi thêm là vòng vo với người đang có hàng người đợi sau lưng.
+- *Loại "chuyển người ngay, chưa xác thực".* Tư vấn viên vẫn sẽ cần bước xác thực, nên khách chờ hai lượt thay vì một.
+- *Loại "AI tự nhả sau khi xác thực đúng".* Đây là cách nhanh nhất cho K2, và là đúng lỗi của K1 và K9. Nhóm chấp nhận K2 chậm hơn khoảng 2 phút để K1 không xảy ra.
+
+**Loại lỗi.** Giao dịch thật bị giữ là **lỗi ngữ cảnh** nhìn từ phía khách: hệ thống giám sát chạy đúng thiết kế nhưng sai với tình huống của họ. Vì vậy AI không xin lỗi dài, không đổ cho khách, và không giải thích lý do giữ (việc không làm số 5 ở §1). Nó nói bước tiếp theo, ai làm, và mất bao lâu.
+
+### Nguyên tắc HAX/PAIR
+
+- **G11 · giải thích vì sao** → khối "Mình dựa vào" trong mỗi câu trả lời (số 3). K1: AI trích "công an", "bị bắt" để khách thấy AI phản ứng với điều gì. Khối này chỉ trích lời khách và trạng thái giao dịch, không nêu tín hiệu của hệ thống.
+- **G10 · thu hẹp phạm vi khi nghi ngờ** → AI hỏi đúng một câu có sẵn lựa chọn (số 4). K1: câu hỏi sau khi khách bấm "AI hiểu sai rồi". K3 và K11 cũng đi đường này.
+- **G9 · sửa dễ dàng** → nút "AI hiểu sai rồi, tôi tự chuyển cho người quen" nằm ngay dưới câu trả lời ở K1 (số 5), và nút "Hoàn tác" trên mỗi việc AI tự làm (số 6).
+
+### Lỗi mà sửa câu chữ không cứu được
+
+- **AI nói "mình không nhả" nhưng vẫn có quyền nhả.** Nếu AI còn gọi được `nha_giao_dich`, một tin nhắn bình tĩnh như K9 vẫn có thể khiến nó gọi. Thiết kế cứu: AI không có tool này. Phía khách không có nút nhả (số 8); chỉ màn hình tư vấn viên có, với hai bước xác nhận (số 9).
+- **AI nói "mình đã chuyển tư vấn viên" lúc 23h** (K8). Câu đúng sự thật nhưng không ai nhận tới 8h. Thiết kế cứu: ngoài giờ trực, AI phải nói rõ chưa có người, giao dịch vẫn giữ, và việc khách tự làm được ngay là khoá ví.
+
+### Lỗi còn lại
+
+- Ngoài giờ trực, K2 không có ai duyệt nhả tới 8h sáng. Thiết kế hiện tại chỉ nói thật điều đó và gợi ý thanh toán cách khác.
+- Tư vấn viên vẫn có thể nhả nhầm cho người bị lừa. Thiết kế chuyển rủi ro sang một người không bị giục và cho họ bằng chứng, chứ không xoá được rủi ro.
+
 
 ## §4. Mức tự chủ  (chặng 4)
 
