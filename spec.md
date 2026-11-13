@@ -4,9 +4,10 @@
 
 | Họ và Tên | Mã Học Viên | Việc đã làm |
 |---|---|---|
-|  |  |  |
-|  |  |  |
-|  |  |  |
+| Nguyễn Trọng Truyền | 2A202603868 | Tạo repo và khung `spec.md`. Dựng prototype (`prototype/index.html`: màn hình khách và màn hình tư vấn viên), viết `prototype/README.md`, chụp hai ảnh đánh số. Viết §5 Prototype và §6 Tốt là gì. Gộp bài của cả nhóm. |
+| Đoàn Anh Hùng | 2A202603880 | Viết §1 Lát cắt & phạm vi (5 việc không làm) và §2 Kịch bản rủi ro (11 kịch bản K1–K11, lập luận chọn K1 và K2 là đắt nhất). |
+| Nguyễn Thanh Tùng | 2A202603807 | Viết §3 Khi AI sai: câu AI nói nguyên văn cho K1 và K2, quyết định hỏi lại / kèm giới hạn / chuyển người, loại lỗi, ba nguyên tắc G11, G10, G9. |
+| Lê Ngọc Khánh | 2A202603804 | Viết §4 Mức tự chủ: mức và lý do cho 5 tool, tool khó xếp nhất (`nha_giao_dich`), thử mức trên K1, K2, K11, năm luật thêm. |
 
 ## §1. Lát cắt & phạm vi
 
@@ -222,11 +223,100 @@ Nếu AI được tự nhả, lời hứa với khách là "trợ lý xử lý g
 
 ## §5. Prototype  (chặng 5)
 
-*Chưa viết.* File: `prototype/index.html`. Ảnh đánh số và bảng chú thích: `prototype/README.md`.
+### File, công cụ, phần mock
+
+- **File:** `prototype/index.html`, mở bằng trình duyệt. Hướng dẫn bấm và bảng chú thích: `prototype/README.md`.
+- **Công cụ:** một file HTML, CSS và JavaScript thuần, dựng bằng coding agent (Claude). Không backend, không đăng nhập, không API key.
+- **Hai màn hình:** (1) khách chat với trợ lý AI trong app ví; (2) tư vấn viên nhận ca được chuyển. Hai màn hình nối với nhau: tư vấn viên bấm thì chat của khách cập nhật.
+- **Phần mock:** phân loại tin nhắn bằng từ khoá; giao dịch, người nhận, tư vấn viên "Lan", số tổng đài, nút xác thực khuôn mặt đều là dữ liệu dựng.
+- **Lời gọi AI thật:** không có.
+
+### Bấm qua ca khó
+
+- **Nút A (K1):** tin bị giục chuyển tiền → AI bảo dừng, tự chuyển tư vấn viên → khách bấm "AI hiểu sai rồi" → AI hỏi một câu → tư vấn viên giữ tiếp hoặc nhả qua hai bước.
+- **Nút B (K2):** tin ở quầy viện phí → AI tự gửi xác thực → khách xác thực → tư vấn viên duyệt → chat báo kết quả.
+- **Ca lạ:** gõ vào ô chat. Tin không khớp loại nào thì AI nói "Mình CHƯA HIỂU RÕ ý bạn", đưa bốn lựa chọn, trong đó có gặp người thật. Prototype không bao giờ đoán rồi làm một việc không đảo được.
+
+### Ảnh đánh số
+
+![Ảnh 1 · K1 bị giục chuyển tiền](prototype/anh-1-ca-bi-lua.png)
+
+![Ảnh 2 · hỏi lại, khoá ví, tư vấn viên xác nhận nhả](prototype/anh-2-hoi-lai-va-duyet.png)
+
+| Số | Thể hiện gì | Nguyên tắc | Mức tự chủ |
+|---|---|---|---|
+| 1 | Nhãn "Đây là AI, không phải nhân viên" và mục "Trợ lý này làm được gì?" | G1 (phụ) | Liệt kê cả ba nhóm: tự làm, cần xác nhận, không làm |
+| 2 | Thẻ giao dịch: "Đang tạm giữ · tiền chưa rời ví" | PAIR Explainability (phụ) | `giu_giao_dich`: tự làm |
+| 3 | Mức dấu hiệu bằng chữ + "Mình dựa vào" + dòng giới hạn | **G11** | — |
+| 4 | AI hỏi đúng một câu, có sẵn lựa chọn | **G10** | — |
+| 5 | Nút "AI hiểu sai rồi, tôi tự chuyển cho người quen" | **G9** | — |
+| 6 | Dòng "Đã tự làm … · Hoàn tác" | **G9** | Tự làm: `yeu_cau_xac_minh`, `chuyen_tu_van_vien` |
+| 7 | Hộp "Khoá ví?" nêu hậu quả, hai nút "Tôi xác nhận khoá ví" và "Chưa khoá" | — | Cần người duyệt (khách): `khoa_vi` |
+| 8 | Dòng "Ở đây không có nút cho giao dịch đi tiếp" | — | `nha_giao_dich`: AI không tự gọi, phía khách không có nút |
+| 9 | Hồ sơ phía tư vấn viên; nút "Nhả giao dịch…" mở hộp "Không đảo lại được" rồi mới tới "Xác nhận nhả" | PAIR Trust (phụ) | Cần người duyệt (tư vấn viên): `nha_giao_dich` |
+| 10 | Tư vấn viên chấm phân loại của AI | G15 (phụ) | — |
+
+Ba nguyên tắc nhóm nhận ở §3 là G11, G10, G9 (số 3, 4, 5, 6). Các nguyên tắc ghi "phụ" có mặt trên màn hình nhưng nhóm không tính vào bài.
+
+Ba mức tự chủ đều thấy được: tự làm có hoàn tác (số 6), cần duyệt có xác nhận (số 7 và 9), đường chuyển người (số 6 và màn hình 2), việc AI không được làm thì không có nút (số 8).
+
+### Quyết định về cách hiện
+
+**Độ chắc: ba mức bằng chữ (RÕ / CHƯA RÕ / CHƯA THẤY) kèm căn cứ.**
+
+- *Loại phần trăm ("87% là lừa đảo").* Con số tạo cảm giác chính xác mà hệ thống không có. Kẻ gian cũng có thể thử nhiều câu để xem số đổi thế nào, tức là dò được cách ví chấm.
+- *Loại màu đèn xanh/đỏ không kèm chữ.* Đèn xanh ở K2 sẽ bị đọc thành "an toàn", trong khi AI chỉ biết là "chưa thấy dấu hiệu".
+- *Chọn chữ kèm căn cứ* vì khách tự kiểm được: họ thấy đúng những chữ mình viết đã làm AI phản ứng.
+
+**Bằng chứng: chỉ trích lời khách và trạng thái giao dịch.**
+
+- *Loại "giao dịch bị giữ vì người nhận mới, số tiền lớn".* Đó là lộ cách phát hiện gian lận, trái việc không làm số 2 và 5 ở §1.
+
+**`nha_giao_dich`: phía khách không có nút, thay bằng một dòng nói ai quyết.**
+
+- *Loại nút "Nhả" bị mờ.* Nút mờ gợi ý rằng nó có thể sáng lên nếu khách nài thêm hoặc xác thực thêm, đúng hành vi của người bị giục ở K1.
+- *Loại ẩn hẳn, không nói gì.* Khách ở K2 sẽ không hiểu vì sao xác thực xong mà tiền chưa đi.
+
+**Việc AI tự làm: một dòng riêng có nút "Hoàn tác", tách khỏi bong bóng chat.**
+
+- *Loại viết lẫn trong câu trả lời ("mình đã chuyển bạn cho tư vấn viên nhé").* Khách đang lo sẽ đọc lướt và không biết có việc đã xảy ra, cũng không có chỗ để rút lại.
+
+**Màn hình tư vấn viên: đặt cạnh màn hình khách trên cùng một trang.**
+
+- *Loại chỉ mô tả bằng lời "sẽ có nhân viên duyệt".* Yêu cầu demo của track là chỉ ra ai quyết nhả và họ thấy gì; phải bấm được mới trả lời được.
+
+### Giới hạn của prototype
+
+- Phân loại bằng từ khoá nên một ca lạ dùng từ khác thường sẽ rơi vào nhánh "chưa hiểu rõ". Nhánh đó vẫn an toàn, nhưng không cho thấy AI phân biệt giỏi tới đâu.
+- Không mô phỏng thời gian thật: "5 phút chưa ai duyệt" và "ngoài giờ trực" là nút bấm tay.
 
 ## §6. Tốt là gì  (chặng 6)
 
-*Chưa viết.* 3 tiêu chí Pass/Fail; chấm thử trên K1 và K2; lỗi còn lại.
+### Ba tiêu chí Pass/Fail
+
+| # | Tiêu chí | Pass khi | Fail khi |
+|---|---|---|---|
+| T1 | **Tiền không đi vì AI** | Từ lúc khách nhắn tới lúc giao dịch đi tiếp, có đúng một người thật (tư vấn viên) bấm xác nhận; phía khách không có nút nào làm giao dịch đi | Có bất kỳ đường bấm nào ở phía khách khiến giao dịch đang giữ đi tiếp |
+| T2 | **Có căn cứ, không lộ, không hứa** | Câu trả lời đầu tiên của AI hiện ít nhất một căn cứ trích từ lời khách hoặc trạng thái giao dịch; và không chứa ngưỡng tiền, lý do giữ, lời hứa hoàn tiền hay lời hỏi OTP | Thiếu căn cứ, hoặc có một trong bốn thứ cấm trên |
+| T3 | **Khách biết ai xử lý và bao lâu** | Trước khi phải chờ, khách đọc được ai đang xử lý và một mốc thời gian (hoặc giờ có người, nếu ngoài giờ trực) | Khách phải chờ mà không có mốc thời gian nào |
+
+Người ngoài nhóm chấm được bằng cách bấm prototype và đọc màn hình, không cần hỏi nhóm.
+
+### Chấm thử trên hai kịch bản đắt nhất
+
+| | T1 | T2 | T3 |
+|---|---|---|---|
+| **K1** (nút A) | **Pass.** Không có nút nhả ở phía khách (số 8); tư vấn viên nhả qua hai bước (số 9) | **Pass.** Trích "công an", "bị bắt"; không nêu lý do giữ | **Fail.** AI nói "đưa bạn tới tư vấn viên" nhưng trong giờ trực không nói bao lâu thì có người vào chat |
+| **K2** (nút B) | **Pass.** Xác thực đúng vẫn không làm tiền đi; phải có tư vấn viên bấm | **Pass.** Trích "viện phí", "ở quầy"; nhãn "CHƯA THẤY", không nói "an toàn" | **Pass.** "khoảng 20 giây", "khoảng 2 phút", "quá 5 phút mình sẽ báo bạn" |
+
+Kết quả: 5 trên 6 ô đạt.
+
+### Lỗi còn lại
+
+- **K1 trượt T3.** Ở §3 nhóm cố ý không hứa thời gian trong câu đầu của K1. Chấm thử cho thấy cái giá: người đang bị giục không biết phải chờ bao lâu thì dễ quay lại nghe người đang giục. Hướng sửa: thêm mốc "tư vấn viên thường vào chat trong khoảng 2 phút" như đã làm ở K2.
+- **K2 ngoài giờ trực.** T3 vẫn đạt vì AI nói rõ 8h mới có người, nhưng khách ở quầy viện phí lúc 21h không được giải quyết. Thiết kế chỉ nói thật và gợi ý thanh toán cách khác.
+- **Tư vấn viên nhả nhầm.** T1 chỉ kiểm rằng người quyết là người thật, không kiểm người đó quyết đúng.
+- **Ba tiêu chí mới chấm trên prototype dùng từ khoá.** Chưa có gì cho thấy một mô hình thật sẽ phân loại K1 và K2 đúng.
 
 ## §7. Demo
 
